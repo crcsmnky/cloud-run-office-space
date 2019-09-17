@@ -2,39 +2,28 @@ import os
 import pymongo
 
 from flask import Flask, request, render_template
-from flask_pymongo import PyMongo
+from google.cloud import firestore
 
 app = Flask(__name__)
 app.secret_key = "7ad6b29a8134b52f54a96e276d38c7f1" # md5 -s "office space"
 
-# app.config['MONGO_URI'] = 'mongodb://{host}:{port}/{database}'.format(
-#     host=os.environ.get('MONGODB_HOST', 'mongodb'),
-#     port=os.environ.get('MONGODB_PORT', 27017),
-#     database=os.environ.get('MONGODB_DB', 'officespace')
-# )
+db = firestore.Client()
 
-app.config['MONGO_URI'] = 'mongodb://mongodb:27017/officespace'
-
-mongo = PyMongo(app)
-
+ACCT = os.environ.get('ACCT_COLLECTION', 'account')
 
 @app.route("/", methods=['GET'])
 def balance():
-    txns = mongo.db.accounts.find({}).sort([
-        ('date', pymongo.DESCENDING)
-    ]).limit(50)
+    txn_stream = db.collection(ACCT).order_by(
+        'date', direction=firestore.Query.DESCENDING).stream()
 
-    ops = [{
-        '$group': {
-            '_id': 'michaelbolton',
-            'total': {
-                '$sum': '$amount'
-            }
-        }
-    }]
-    tot = list(mongo.db.accounts.aggregate(ops))[0]
+    total = 0
+    txns = list()
 
-    return render_template('balance.html', txns=list(txns), total=round(tot['total'], 3))
+    for txn in txn_stream:
+        txns.add(txn.to_dict())
+        total += txn['amount']
+
+    return render_template('balance.html', txns=txns, total=total)
 
 
 if __name__ == '__main__':

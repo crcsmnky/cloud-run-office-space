@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Transaction Generator</title>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <div class="mx-auto">
+                <h1 align="center">Generate Bank Transactions</h1>    
+            </div>
+        </div>
+
+        <div class="row"><div class="col">&nbsp;</div></div>
+
+        <div class="row">
+            <div class="col">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for c, m in messages %}
+                            <div class="alert alert-{{ c }}" role="alert">
+                                {{ m }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="row"><div class="col">&nbsp;</div></div>
+
+        <div class="row justify-content-center">
+            <div class="col"> 
+                <form action="/" method="POST">
+                    <div class="form-row" style="margin-left: 50px;">
+                        <div class="col">
+                            Transactions<br>
+                            <select name="txn_count" style="width: 200px;">
+                                <option value="10" selected>10</option>
+                                <option value="100">100</option>
+                                <option value="1000">1000</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            Min Amount<br>
+                            <input  style="width: 200px;" type="number" name="txn_minamt" min="1" max="100" value="100">
+                        </div>
+                        <div class="col">
+                            Max Amount<br>
+                            <input  style="width: 200px;" type="number" name="txn_maxamt" min="101" max="1000" value="1000">
+                        </div>
+                        <div class="col">
+                            Interest Rate<br>
+                            <input  style="width: 200px;" type="number" name="txn_rate" value="0.0254321">
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top:50px;">
+                        <div class="col" align="center">
+                            <button class="btn btn-primary" type="submit">Generate</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -15,7 +15,7 @@ API = 'http://{host}'.format(
 @app.route('/', methods=['GET', 'POST'])
 def home():
     print 'using {api}'.format(api=API)
-    
+
     if request.method == 'POST':
         count = int(request.form['txn_count'])
         min_amt = int(request.form['txn_minamt'])
@@ -26,8 +26,11 @@ def home():
 
         try:
             for a in amounts:
-                ret = requests.get(API + '/compute?amount={amount}&rate={rate}'.format(
-                    amount=a, rate=rate))
+                postdata = {
+                    'amount': amount, 
+                    'rate': rate
+                }
+                ret = requests.post(API + '/compute', data=postdata)
                 time.sleep(0.1)
         except Exception as e:
             flash('Error: {}'.format(e), 'danger')
@@ -35,6 +38,7 @@ def home():
             flash('Generated {} transactions'.format(count), 'success')
 
     return render_template('generator.html')
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

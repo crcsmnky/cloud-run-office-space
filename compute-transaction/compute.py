@@ -19,11 +19,12 @@ def compute():
     amount = int(request.form['amount'])
     rate = float(request.form['rate'])
 
-    # FIXME
-    # tot = (amount * rate)
+    bug = os.environ.get('BUG', None)
 
-    # FIXED
-    tot = (amount * rate) + amount
+    if bug is None:
+        tot = (amount * rate) + amount
+    else:
+        tot = amount * rate
 
     txn = float(str(Decimal(tot).quantize(Decimal('.01'), rounding=ROUND_DOWN)))
     rem = tot - txn

@@ -20,8 +20,8 @@ def balance():
     txns = list()
 
     for txn in txn_stream:
-        txns.add(txn.to_dict())
-        total += txn['amount']
+        txns.append(txn.to_dict())
+        total += txn.get('amount')
 
     return render_template('balance.html', txns=txns, total=total)
 

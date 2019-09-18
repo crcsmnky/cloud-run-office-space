@@ -17,14 +17,14 @@ ACCT = os.environ.get('ACCT_COLLECTION', 'account')
 @app.route('/compute', methods=['POST'])
 def compute():
     amount = int(request.form['amount'])
-    rate = float(request.form.['rate'])
+    rate = float(request.form['rate'])
 
     # FIXME
     # tot = (amount * rate)
 
     # FIXED
     tot = (amount * rate) + amount
-    
+
     txn = float(str(Decimal(tot).quantize(Decimal('.01'), rounding=ROUND_DOWN)))
     rem = tot - txn
 

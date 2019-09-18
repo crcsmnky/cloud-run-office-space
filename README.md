@@ -22,7 +22,7 @@ This repo contains a set of sample microservices that can be used to demonstrate
 
 The application allows you to generate a series of banking transactions – each time a transaction occurs, interest is computed and added to the original amount. The total amount is rounded down to the nearest penny and deposited into the banks holdings. The remaining fractional pennies are deposited into another account. 
 
-Refer to [Superman III](https://www.imdb.com/title/tt0086393/) or [Office Space](https://www.imdb.com/title/tt0151804/) to learn more 🙃
+Refer to [Superman III](https://www.imdb.com/title/tt0086393/) or [Office Space](https://www.imdb.com/title/tt0151804/) to learn more 🙃. This project was inspired by, and owes a debt of gratitude to [jzaccone/office-space-dockercon2017](https://github.com/jzaccone/office-space-dockercon2017).
 
 See below for instructions on how to build and deploy the services.
 

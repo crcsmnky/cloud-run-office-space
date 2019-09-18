@@ -4,12 +4,11 @@ metadata:
   name: transaction-generator
   namespace: default
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/crcsmnky/transaction-generator:0.5-firestore
-            env:
-              - name: API
-                value: compute-transaction.run.app
+  template:
+    spec:
+      containers:
+        - image: gcr.io/crcsmnky/transaction-generator-firestore:latest
+          env:
+            - name: COMPUTE_API
+              value: "https://compute-transaction-nuhpx2mdia-uc.a.run.app"
+  

@@ -8,8 +8,8 @@ from flask import Flask, request, render_template, flash
 app = Flask(__name__)
 app.secret_key = '7ad6b29a8134b52f54a96e276d38c7f1' # md5 -s 'office space'
 
-API = 'http://{host}'.format(
-    host=os.environ.get('API', 'localhost:6000'),
+API = '{host}'.format(
+    host=os.environ.get('COMPUTE_API', 'http://localhost:6000'),
 )
 
 @app.route('/', methods=['GET', 'POST'])

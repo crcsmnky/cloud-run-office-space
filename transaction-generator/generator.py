@@ -25,7 +25,7 @@ def home():
         amounts = random.sample(xrange(min_amt, max_amt), count)
 
         try:
-            for a in amounts:
+            for amount in amounts:
                 postdata = {
                     'amount': amount, 
                     'rate': rate

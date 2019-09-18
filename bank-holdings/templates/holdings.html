@@ -34,7 +34,7 @@
                     {% for t in txns %}
                         <tr>
                             <td>{{ t['date'] }}</td>
-                            <td>{{ t['amount'] }}</td>
+                            <td>${{ t['amount'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -15,7 +15,7 @@
         <div class="row justify-content-center">
             <div class="col">
                 <h4 align="center">
-                    Balance: ${{ total }}
+                    Balance: ${{ total|round(2, 'ceil') }}
                 </h4>
             </div>
         </div>
@@ -34,7 +34,7 @@
                     {% for t in txns %}
                         <tr>
                             <td>{{ t['date'] }}</td>
-                            <td>{{ t['amount'] }}</td>
+                            <td>${{ t['amount']|round(3,'ceil') }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

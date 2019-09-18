@@ -1,34 +1,30 @@
 import os
 
 from decimal import Decimal, ROUND_DOWN
-from bson.json_util import dumps
 from datetime import datetime
-from flask import Flask, request, abort
-from flask_pymongo import PyMongo
+from flask import Flask, request
+
+from google.cloud import firestore
 
 app = Flask(__name__)
 app.secret_key = "7ad6b29a8134b52f54a96e276d38c7f1" # md5 -s "office space"
 
-# app.config['MONGO_URI'] = 'mongodb://{host}:{port}/{database}'.format(
-#     host=os.environ.get('MONGODB_HOST', 'mongodb'),
-#     port=os.environ.get('MONGODB_PORT', 27017),
-#     database=os.environ.get('MONGODB_DB', 'officespace')
-# )
+db = firestore.Client()
 
-app.config['MONGO_URI'] = 'mongodb://mongodb:27017/officespace'
+BANK = os.environ.get('BANK_COLLECTION', 'holdings')
+ACCT = os.environ.get('ACCT_COLLECTION', 'account')
 
-mongo = PyMongo(app)
-
-
-@app.route('/compute', methods=['GET'])
+@app.route('/compute', methods=['POST'])
 def compute():
-    amount = int(request.args.get('amount', None))
-    rate = float(request.args.get('rate', None))
+    amount = int(request.form['amount'])
+    rate = float(request.form['rate'])
 
-    if not amount or not rate:
-        abort(404)
+    # FIXME
+    # tot = (amount * rate)
 
+    # FIXED
     tot = (amount * rate) + amount
+
     txn = float(str(Decimal(tot).quantize(Decimal('.01'), rounding=ROUND_DOWN)))
     rem = tot - txn
 
@@ -36,17 +32,15 @@ def compute():
         'date': datetime.now(),
         'amount': txn
     }
+    db.collection(BANK).add(banktxn)
 
-    mongo.db.bank.insert(banktxn)
-
-    usertxn = {
+    accttxn = {
         'date': datetime.now(),
         'amount': rem
     }
+    db.collection(ACCT).add(accttxn)
 
-    mongo.db.accounts.insert(usertxn)
-
-    return 'ok', 200
+    return 'added', 201
 
 
 if __name__ == '__main__':

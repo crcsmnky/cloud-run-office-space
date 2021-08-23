@@ -3,43 +3,33 @@ import requests
 import random
 import time
 
-from flask import Flask, request, render_template, flash
-
-app = Flask(__name__)
-app.secret_key = '7ad6b29a8134b52f54a96e276d38c7f1' # md5 -s 'office space'
-
-API = '{host}'.format(
+COMPUTE_API = '{host}'.format(
     host=os.environ.get('COMPUTE_API', 'http://localhost:6000'),
 )
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    print 'using {api}'.format(api=API)
+def generate():
 
-    if request.method == 'POST':
-        count = int(request.form['txn_count'])
-        min_amt = int(request.form['txn_minamt'])
-        max_amt = int(request.form['txn_maxamt'])
-        rate = float(request.form['txn_rate'])
+    batch = int(os.environ.get('BATCH_SIZE', 10))
+    min_amount = int(os.environ.get('MIN_AMOUNT', 1))
+    max_amount = int(os.environ.get('MAX_AMOUNT', 1000))
+    rate = float(os.environ.get('INTEREST_RATE', .0375))
 
-        amounts = random.sample(xrange(min_amt, max_amt), count)
+    txn_amounts = random.sample(range(min_amount, max_amount), batch)
 
-        try:
-            for amount in amounts:
-                postdata = {
-                    'amount': amount, 
-                    'rate': rate
-                }
-                ret = requests.post(API + '/compute', data=postdata)
-                time.sleep(0.1)
-        except Exception as e:
-            flash('Error: {}'.format(e), 'danger')
-        finally:
-            flash('Generated {} transactions'.format(count), 'success')
-
-    return render_template('generator.html')
+    try:
+        for amount in txn_amounts:
+            txn = {
+                'amount': amount,
+                'rate': rate
+            }
+            ret = requests.post(COMPUTE_API + '/compute', data = txn)
+            time.sleep(1)
+    except Exception as e:
+        print(f'error: {e}')
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='127.0.0.1', port=port, debug=False)
+    print(f'using COMPUTE_API ==> {COMPUTE_API}/compute')
+
+    while True:
+        generate()

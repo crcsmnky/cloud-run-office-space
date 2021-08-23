@@ -1,5 +1,4 @@
 import os
-import pymongo
 
 from flask import Flask, request, render_template
 from google.cloud import firestore
@@ -14,7 +13,7 @@ BANK = os.environ.get('BANK_COLLECTION', 'holdings')
 @app.route("/", methods=['GET'])
 def balance():
     txn_stream = db.collection(BANK).order_by(
-        'date', direction=firestore.Query.DESCENDING).stream()
+        'date', direction=firestore.Query.DESCENDING).limit(10).stream()
 
     total = 0
     txns = list()

@@ -1,4 +1,4 @@
-FROM python:2
+FROM python:3-slim
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME

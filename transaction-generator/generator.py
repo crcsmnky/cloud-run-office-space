@@ -8,7 +8,6 @@ COMPUTE_API = '{host}'.format(
 )
 
 def generate():
-
     batch = int(os.environ.get('BATCH_SIZE', 10))
     min_amount = int(os.environ.get('MIN_AMOUNT', 1))
     max_amount = int(os.environ.get('MAX_AMOUNT', 1000))
@@ -23,7 +22,7 @@ def generate():
                 'rate': rate
             }
             ret = requests.post(COMPUTE_API + '/compute', data = txn)
-            time.sleep(1)
+            time.sleep(random.randint(1,10))
     except Exception as e:
         print(f'error: {e}')
 
